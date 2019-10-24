@@ -169,21 +169,23 @@ class Edit extends Component {
 			} );
 		};
 
+		const latestPostsWithFeaturedImages = latestPosts ? latestPosts.filter( ( post ) => post.newspack_featured_image_src ) : null;
+
 		return (
 			<Fragment>
 				<div className={ classes } ref={ this.carouselRef }>
-					{ latestPosts && ! latestPosts.length && (
-						<Placeholder>{ __( 'Sorry, no posts were found.' ) }</Placeholder>
+					{ latestPostsWithFeaturedImages && ! latestPostsWithFeaturedImages.length && (
+						<Placeholder>{ __( 'Sorry, no posts with featured images assigned were found.' ) }</Placeholder>
 					) }
-					{ ! latestPosts && (
+					{ ! latestPostsWithFeaturedImages && (
 						<Placeholder>
 							<Spinner />
 						</Placeholder>
 					) }
-					{ latestPosts && (
+					{ latestPostsWithFeaturedImages && (
 						<Fragment>
 							<amp-carousel className="swiper-wrapper" width="4" height="3" layout="responsive" type="slides">
-								{ latestPosts.map( post => post.newspack_featured_image_src && (
+								{ latestPostsWithFeaturedImages.map( post => (
 									<article className="post-has-image swiper-slide" key={ post.id }>
 										<figure className="post-thumbnail">
 											{ post.newspack_featured_image_src && (
