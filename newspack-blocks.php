@@ -20,6 +20,47 @@ define( 'NEWSPACK_BLOCKS__VERSION', '1.0.0-alpha.13' );
  */
 
 class Newspack_Blocks {
+
+	/**
+	 * Register default scripts.
+	 */
+	public static function register_default_scripts( \WP_Scripts $scripts ) {
+		if ( ! isset( $scripts->registered['amp-runtime'] ) ) {
+			// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+			$scripts->add(
+				'amp-runtime',
+				'https://cdn.ampproject.org/v0.js',
+				null,
+				null,
+				true
+			);
+		}
+		if ( ! isset( $scripts->registered['amp-carousel'] ) ) {
+			// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+			$scripts->add(
+				'amp-carousel',
+				'https://cdn.ampproject.org/v0/amp-carousel-latest.js',
+				array( 'amp-runtime' ),
+				null,
+				true
+			);
+		} elseif ( 'https://cdn.ampproject.org/v0/amp-carousel-0.1.js' === $scripts->registered['amp-carousel']->src ) {
+			// See <https://github.com/ampproject/amp-wp/pull/3115>.
+			$scripts->registered['amp-carousel']->src = 'https://cdn.ampproject.org/v0/amp-carousel-0.2.js';
+		}
+
+		if ( ! isset( $scripts->registered['amp-selector'] ) ) {
+			// phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+			$scripts->add(
+				'amp-selector',
+				'https://cdn.ampproject.org/v0/amp-selector-latest.js',
+				array( 'amp-runtime' ),
+				null,
+				true
+			);
+		}
+	}
+
 	/**
 	 * Enqueue block scripts and styles for editor.
 	 */
@@ -287,6 +328,8 @@ function newspack_blocks_image_size_for_orientation( $orientation = 'landscape' 
 require_once NEWSPACK_BLOCKS__PLUGIN_DIR . 'class-newspack-blocks-api.php';
 
 Newspack_Blocks::manage_view_scripts();
+
+add_action( 'wp_default_scripts', array( 'Newspack_Blocks', 'register_default_scripts' ), 100 );
 add_action( 'enqueue_block_editor_assets', array( 'Newspack_Blocks', 'enqueue_block_editor_assets' ) );
 add_action( 'wp_enqueue_scripts', array( 'Newspack_Blocks', 'enqueue_block_styles_assets' ) );
 
