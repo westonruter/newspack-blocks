@@ -68,6 +68,11 @@ class Newspack_Blocks {
 		$editor_script = plugins_url( NEWSPACK_BLOCKS__BLOCKS_DIRECTORY . 'editor.js', __FILE__ );
 		$editor_style  = plugins_url( NEWSPACK_BLOCKS__BLOCKS_DIRECTORY . 'editor.css', __FILE__ );
 		$dependencies  = self::dependencies_from_path( NEWSPACK_BLOCKS__PLUGIN_DIR . 'dist/editor.deps.json' );
+
+		// Add dependencies for Carousel block.
+		$dependencies[] = 'amp-carousel';
+		$dependencies[] = 'amp-selector';
+
 		wp_enqueue_script(
 			'newspack-blocks-editor',
 			$editor_script,

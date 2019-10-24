@@ -2,7 +2,6 @@
  * Internal dependencies
  */
 import QueryControls from '../homepage-articles/query-controls';
-import createSwiper from './create-swiper';
 import classnames from 'classnames';
 import AutocompleteTokenField from '../homepage-articles/components/autocomplete-tokenfield.js';
 
@@ -51,36 +50,6 @@ class Edit extends Component {
 		const { attributes, latestPosts } = this.props;
 		const { autoPlayState } = this.state;
 		const { autoplay, delay } = attributes;
-		const realIndex =
-			this.swiperInstance && latestPosts && this.swiperInstance.realIndex < latestPosts.length
-				? this.swiperInstance.realIndex
-				: 0;
-		this.swiperInstance && this.swiperInstance.destroy( true, true );
-		this.swiperInstance = createSwiper(
-			this.carouselRef.current,
-			{
-				autoplay:
-					autoplay && autoPlayState
-						? {
-								delay: delay * 1000,
-								disableOnInteraction: false,
-						  }
-						: false,
-				effect: 'slide',
-				initialSlide: realIndex,
-				loop: true,
-				navigation: {
-					nextEl: this.btnNextRef.current,
-					prevEl: this.btnPrevRef.current,
-				},
-				pagination: {
-					clickable: true,
-					el: this.paginationRef.current,
-					type: 'bullets',
-				},
-			},
-			{}
-		);
 	}
 	render() {
 		const {
@@ -213,7 +182,7 @@ class Edit extends Component {
 					) }
 					{ latestPosts && (
 						<Fragment>
-							<div className="swiper-wrapper">
+							<amp-carousel className="swiper-wrapper" width="4" height="3" layout="responsive" type="slides">
 								{ latestPosts.map( post => post.newspack_featured_image_src && (
 									<article className="post-has-image swiper-slide" key={ post.id }>
 										<figure className="post-thumbnail">
@@ -259,41 +228,7 @@ class Edit extends Component {
 										</div>
 									</article>
 								) ) }
-							</div>
-							<a
-								className="amp-carousel-button amp-carousel-button-prev swiper-button-prev"
-								ref={ this.btnPrevRef }
-								role="button"
-							/>
-							<a
-								className="amp-carousel-button amp-carousel-button-next swiper-button-next"
-								ref={ this.btnNextRef }
-								role="button"
-							/>
-							{ autoplay && (
-								<Fragment>
-									<a
-										className="amp-carousel-button-pause amp-carousel-button"
-										role="button"
-										onClick={ () => {
-											this.swiperInstance.autoplay.stop();
-											this.setState( { autoPlayState: false } );
-										} }
-									/>
-									<a
-										className="amp-carousel-button-play amp-carousel-button"
-										role="button"
-										onClick={ () => {
-											this.swiperInstance.autoplay.start();
-											this.setState( { autoPlayState: true } );
-										} }
-									/>
-								</Fragment>
-							) }
-							<div
-								className="swiper-pagination-bullets amp-pagination"
-								ref={ this.paginationRef }
-							/>
+							</amp-carousel>
 						</Fragment>
 					) }
 				</div>
